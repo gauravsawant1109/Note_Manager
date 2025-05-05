@@ -44,8 +44,8 @@ const useCustomHook = () => {
     setInitial([...initial, addedNote])
     setEnteredDate("")
     console.log("initial Notes", initial);
-    navigate("/Home");
-
+    toast.success("Note Successfully added");
+    
   }
   const [searchDate, setSearchDate] = useState()
   // const getData = localStorage.getItem("Notes");
@@ -63,10 +63,13 @@ const useCustomHook = () => {
   console.log("filtered data", filteredData);
   const [result, setResult] = useState("Select Note In Details ")
   function RemoveNote(noteID) {
-    setFilteredData(filteredData.filter((n) => n != noteID))
-    if (filteredData.length == 0) {
-      setResult("No Any Note Available")
-    }
+    const updatedNotes = initial.filter((n) => n != noteID)
+    setInitial(updatedNotes)// also delete from localStorage
+    setFilteredData(updatedNotes)
+    // setFilteredData(filteredData.filter((n) => n != noteID)) // only delete from window
+    // if (filteredData.length == 0) {
+    //   setResult("No Any Note Available")
+    // }
   }
 
   return { result, EnteredDate, RemoveNote, filteredData, setEnteredDate, setNote, note, AddedNote, initial, setInitial, Title, setTitle, searchNote, searchDate, setSearchDate }
