@@ -1,53 +1,80 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React from "react";
+import { ToastContainer } from 'react-toastify';
 import useCustomHook from "./useCustomHook";
-import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 const NewNote = () => {
-  const { EnteredDate, setEnteredDate, setNote, note, AddedNote, initial,Title,setTitle } =
-    useCustomHook();
+  const { 
+    EnteredDate, 
+    setEnteredDate, 
+    setNote, 
+    note, 
+    AddedNote, 
+    Title, 
+    setTitle 
+  } = useCustomHook();
 
   return (
-    <form
-      onSubmit={AddedNote}
-      className=" w-75"
-      // style={{ height: "100vh" }}
-    >
-      <div className="">
-        <h2 className="text-center">Add New Note</h2>
-        <div className="text-center m-2">
-          {" "}
-          <input type="text" placeholder="Enter Title" className="w-100 m-2" value={Title} onChange={(e)=>setTitle(e.target.value)}/>
+    <div className="container py-4">
+      <form
+        onSubmit={AddedNote}
+        className="w-75 mx-auto bg-white p-4 rounded shadow-sm"
+      >
+        <h2 className="text-center mb-4">Add New Note</h2>
+        
+        <div className="mb-3">
+          <label htmlFor="title" className="form-label">Title</label>
+          <input 
+            type="text" 
+            id="title"
+            placeholder="Enter Title" 
+            className="form-control" 
+            value={Title} 
+            onChange={(e) => setTitle(e.target.value)}
+            required
+          />
         </div>
-        <textarea
-          className="w-100 rounded bg-light-subtle p-2 border"
-          placeholder="Enter Your Note"
-          rows="4"
-          value={note}
-          onChange={(e) => setNote(e.target.value)}
-        />
-        <p className="text-center mt-2">
-          Submit On: {new Date().toISOString().slice(0,10)} (default)
-          <div>
-            {" "}
-            <input
-              type="date"
-              placeholder="Enter Your Date"
-              className=" p-1"
-              value={EnteredDate} 
-              onChange={(e) => setEnteredDate(e.target.value)}
-            />
-          </div>
-        </p>
-        <div className="d-flex justify-content-center m-3">
-          <button type="submit" className="btn btn-outline-primary">
-            {/* <Link to="/Home">Add Note</Link> */}
+        
+        <div className="mb-3">
+          <label htmlFor="noteContent" className="form-label">Note Content</label>
+          <textarea
+            id="noteContent"
+            className="form-control"
+            placeholder="Enter Your Note"
+            rows="6"
+            value={note}
+            onChange={(e) => setNote(e.target.value)}
+            required
+          />
+        </div>
+        
+        <div className="mb-4">
+          <label htmlFor="noteDate" className="form-label">
+            Date: {EnteredDate || new Date().toISOString().slice(0,10)} 
+            {EnteredDate ? "" : " (default)"}
+          </label>
+          <input
+            type="date"
+            id="noteDate"
+            className="form-control"
+            value={EnteredDate} 
+            onChange={(e) => setEnteredDate(e.target.value)}
+          />
+        </div>
+        
+        <div className="d-flex justify-content-center">
+          <button 
+            type="submit" 
+            className="btn btn-primary px-4 py-2"
+            disabled={!Title.trim() || !note.trim()}
+          >
             Add Note
           </button>
         </div>
-      </div>
-      <ToastContainer />
-    </form>
-    
+      </form>
+      
+      <ToastContainer position="top-right" autoClose={3000} />
+    </div>
   );
 };
 

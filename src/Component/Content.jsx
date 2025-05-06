@@ -1,7 +1,8 @@
 import React from "react";
-import { FaPlus  } from "react-icons/fa";
+import { FaPlus, FaSearch, FaTrash, FaEdit, FaCalendarAlt } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import useCustomHook from "./useCustomHook";
+import "../CSS/Component.css"
 const Content = () => {
   const {
     initial,
@@ -14,76 +15,92 @@ const Content = () => {
     RemoveNote,
     setSearchDate,
   } = useCustomHook();
-  // console.log(initial);
-  // const getData = localStorage.getItem("Notes");
-  // const dataOne = JSON.parse(getData);
-  // console.log("geted data :", dataOne);
+
   console.log("filteredData", filteredData);
 
   return (
-    <>
-   
-      {/* <form className="d-flex" role="search" onSubmit={searchNote}>
-              <input
-                className="form-control me-2"
-                type="date"
-                placeholder="Search"
-                aria-label="Search"
-                value={searchDate}
-                onChange={(e)=>setSearchDate(e.target.value)}
-              />
-              <button className="btn btn-outline-success" type="submit">
-                Search
-              </button>
-            </form> */}
-
-      <div className="d-flex justify-content-center mt-3 mb-3">
-        <h4>
-        
-          <Link to="/Home/NewNote"   className="btn btn-primary " style={{textDecoration:"none"}}>
-            <span  className="text-white " >
-              New Note 
-            </span>
-          </Link>
-        </h4>
-        {/* <p>{getDate()}</p> */}
-      </div>
-
-       {/* serach bar  */}
-    <div className="text-center mb-4">
-        <input
-          type="date"
-          className="form-control d-inline w-auto"
-          value={searchDate}
-          onChange={(e) => setSearchDate(e.target.value)}
-        />
-        <button className="btn btn-primary ms-2" onClick={searchNote}>
-          Search
-        </button>
-      </div>
-      <div>
-        {filteredData.length == 0 ? (
-          <p className="text-center">No Note Added</p>
-        ) : (
-          <div className=" d-flex justify-content-center flex-column " style={{width:"400px"}}>
-           {filteredData.map((note, i) => (
-          <div key={i} className="bg-light text-black rounded ms-5 me-5 mb-3 mt- 3 w-75   p-3 cu-list shadow-lg bg-body-tertiary rounded" >
-              
-              <Link to={`/Home/${encodeURIComponent(JSON.stringify(note))}`} style={{textDecoration:"none"}}>  <h5>
-                  {i + 1}) {note.Title}
-                </h5>
-                <p>{`${(note.note).slice(0,20)}....`}</p></Link> 
-               <div className="d-md-flex justify-content-between"> <p>
-                 
-                  on : {note.EnteredDate}
-                  {/*{note.EnteredDate== null ? new Date().toISOString().slice(0, 10) : note.EnteredDate } */}
-                </p><button className="btn btn-danger p-1" onClick={()=>RemoveNote(note)}>Remove</button></div>
-              </div>
-            ))}{" "}
+    <div className="container py-4">
+      <div className="row mb-4">
+        <div className="col-md-8 mx-auto">
+          {/* Header with new note button */}
+          <div className="d-flex justify-content-between align-items-center mb-4">
+            <h2 className="fw-bold text-primary">My Notes</h2>
+            <Link 
+              to="/Home/NewNote" 
+              className="btn btn-primary rounded-pill shadow-sm d-flex align-items-center"
+            >
+              <FaPlus className="me-2" /> New Note
+            </Link>
           </div>
-        )}
+
+          {/* Search bar */}
+          <div className="card shadow-sm mb-4">
+            <div className="card-body">
+              <div className="input-group">
+                <span className="input-group-text bg-white border-end-0">
+                  <FaCalendarAlt className="text-primary" />
+                </span>
+                <input
+                  type="date"
+                  className="form-control border-start-0"
+                  value={searchDate}
+                  onChange={(e) => setSearchDate(e.target.value)}
+                  aria-label="Search by date"
+                />
+                <button 
+                  className="btn btn-primary" 
+                  onClick={searchNote}
+                >
+                  <FaSearch className="me-2" /> Search
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Notes list */}
+          {filteredData.length === 0 ? (
+            <div className="text-center p-5 bg-light rounded shadow-sm">
+              <div className="py-4">
+                <FaEdit className="text-muted mb-3" style={{ fontSize: "3rem" }} />
+                <h4 className="text-muted">No Notes Found</h4>
+                <p className="text-muted">Create your first note to get started!</p>
+              </div>
+            </div>
+          ) : (
+            <div className="notes-container">
+              {filteredData.map((note, i) => (
+                <div key={i} className="card shadow-sm mb-3 note-card hover-shadow">
+                  <div className="card-body">
+                    <Link 
+                      to={`/Home/${encodeURIComponent(JSON.stringify(note))}`} 
+                      className="text-decoration-none"
+                    >
+                      <h5 className="card-title text-primary fw-bold mb-2">
+                        {note.Title}
+                      </h5>
+                      <p className="card-text text-muted mb-3">
+                        {`${(note.note).slice(0, 80)}${note.note.length > 80 ? '...' : ''}`}
+                      </p>
+                    </Link>
+                    <div className="d-flex justify-content-between align-items-center">
+                      <small className="text-muted d-flex align-items-center">
+                        <FaCalendarAlt className="me-1" size={12} /> {note.EnteredDate}
+                      </small>
+                      <button 
+                        className="btn btn-outline-danger btn-sm" 
+                        onClick={() => RemoveNote(note)}
+                      >
+                        <FaTrash className="me-1" /> Remove
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
-    </>
+    </div>
   );
 };
 
